@@ -73,16 +73,16 @@ class StatsView @JvmOverloads constructor(
         if (data.isEmpty()) {
             return
         }
-
         val degree = 360F
-        val rotation = degree * progress
         var startFrom = -90F
-
+        val maxRotation = degree * progress + startFrom
         for ((index, datum) in data.withIndex()) {
-            val angle = datum * degree
+            val angle = 360F * datum
+            val newAngle = min(maxRotation - startFrom, angle)
             paint.color = colors.getOrNull(index) ?: randomColor()
-            canvas.drawArc(oval, startFrom + rotation, angle * progress, false, paint)
+            canvas.drawArc(oval, startFrom, newAngle, false, paint)
             startFrom += angle
+            if (startFrom > maxRotation) return
         }
 
         canvas.drawText(
